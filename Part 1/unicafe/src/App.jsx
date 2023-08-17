@@ -1,13 +1,34 @@
 import { useState } from 'react'
-const Display = (props) => {
+
+const StatisticLine = (props) => {
   console.log(props)
   return (
     <div>
-      <p>
-        {props.text} {props.value} {props.unit}
-      </p>
+      {props.text} {props.text === 'positive'? `${props.value} %` : props.value}
     </div>
   )
+}
+
+const Statisitcs = (props) => {
+  console.log(props)
+  if (props.total === 0){
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  } else{
+    return (
+      <div>
+        <StatisticLine text = 'good' value = {props.good}/>
+        <StatisticLine text = 'neutral' value = {props.neutral}/>
+        <StatisticLine text = 'bad' value = {props.bad}/>
+        <StatisticLine text = 'total' value = {props.total}/>
+        <StatisticLine text = 'average' value = {props.average}/>
+        <StatisticLine text = 'positive' value = {props.positive}/>
+      </div>
+    )
+  }
 }
 
 const Button = (props) => {
@@ -71,12 +92,7 @@ const App = () => {
       <Button type = 'neutral' handleOnClick = {incrementNeutral}/ >
       <Button type = 'bad' handleOnClick = {incrementBad}/ >
       <h1>statistics</h1>
-      <Display text = 'good' value = {good} unit = ''/>
-      <Display text = 'neutral' value = {neutral} unit = ''/>
-      <Display text = 'bad' value = {bad} unit = ''/>
-      <Display text = 'all' value = {total} unit = ''/>
-      <Display text = 'average' value = {average} unit = ''/>
-      <Display text = 'positive' value = {positiveFeedbackPercentage} unit = '%'/>
+      <Statisitcs good = {good} bad = {bad} neutral = {neutral} total = {total} average = {average} positive = {positiveFeedbackPercentage} />
     </div>
   )
 }
