@@ -8,6 +8,19 @@ const Button = (props) => {
   )
 }
 
+const findLargestVoteIndex = (voteCounts) => {
+  let index = 0;
+  const size = voteCounts.length
+
+  for (let i = 1; i < size; i++){
+    if (voteCounts[index] < voteCounts[i]){
+      index = i
+    }
+  }
+
+  return index;
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -41,12 +54,18 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <blockquote>
         {anecdotes[selected]}
       </blockquote>
       <p>has {vote[selected]} votes</p>
       <Button text = "vote" handleOnClick = {voteAquote} />
       <Button text = "next anecdote" handleOnClick = {getAnecdotes}/>
+
+      <h1>Anecdote with most votes</h1>
+      <blockquote>
+        {anecdotes[findLargestVoteIndex(vote)]}
+      </blockquote>
     </div>
   )
 }
