@@ -4,7 +4,7 @@ import Total from './Total';
 
 const Course = ({course}) => {
     console.log('inside Course')
-    console.log(course.parts)
+    console.log(course)
     return (
       <div>
         <Header course = {course.name}/>
