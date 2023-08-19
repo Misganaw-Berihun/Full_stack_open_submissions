@@ -3,10 +3,15 @@ import Part from './components/Part.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '040-1234567' }
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ])
   const [newName, setNewName] = useState('Enter a name:')
   const [newPhone, setNewPhone] = useState('Enter phone: ')
+  const [searchName, setSearchName] = useState('')
+   
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -30,9 +35,23 @@ const App = () => {
     setNewPhone(event.target.value)
   }
 
+
+  const handleSearchChange = (event) => {
+    const target = event.target.value 
+    console.log(target)
+    setSearchName(target)
+  }
+
+  const end = searchName.length
+  const personsToShow = end != 0 
+    ? persons.filter(field => field.name.slice(0, end).toLowerCase() === searchName.toLowerCase()) 
+    : persons 
+
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <input value = {searchName} onChange={handleSearchChange}/>
       <form onSubmit={addPerson}>
         <div>
           name: <input value = {newName} onChange={handleNameChange}/>
@@ -45,7 +64,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Part persons = {persons} />
+      <Part persons = {personsToShow} />
     </div>
   )
 }
