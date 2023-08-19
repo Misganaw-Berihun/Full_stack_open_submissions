@@ -3,9 +3,10 @@ import Part from './components/Part.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', phone: '040-1234567' }
   ]) 
   const [newName, setNewName] = useState('Enter a name:')
+  const [newPhone, setNewPhone] = useState('Enter phone: ')
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -14,7 +15,7 @@ const App = () => {
     if (persons.map(person => person.name).includes(newName)){
       alert(`${newName} is already added to phonebook`)
     } else{
-      const newPerson = {name: newName}
+      const newPerson = {name: newName, phone: newPhone}
       setPersons(persons.concat(newPerson))
     }
   }
@@ -24,12 +25,20 @@ const App = () => {
     setNewName(event.target.value)
   }
 
+  const handlePhoneChange = (event) => {
+    console.log(event.target.value)
+    setNewPhone(event.target.value)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
           name: <input value = {newName} onChange={handleNameChange}/>
+        </div>
+        <div>
+          number: <input value = {newPhone} onChange = {handlePhoneChange} />
         </div>
         <div>
           <button type="submit">add</button>
