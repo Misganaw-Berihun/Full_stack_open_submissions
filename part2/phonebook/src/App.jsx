@@ -1,20 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Persons from './components/Persons.jsx'
 import Filter from './components/Filter.jsx'
+import axios from 'axios'
 import PersonForm from './components/PersonForm.jsx'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('Enter a name:')
   const [newPhone, setNewPhone] = useState('Enter phone: ')
   const [searchName, setSearchName] = useState('')
    
-
+  useEffect(() => {
+    console.log('effect')
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('setting persons ...')
+      setPersons(response.data)
+    })
+  }, [])
+  
   const addPerson = (event) => {
     event.preventDefault()
     console.log(event.target)
@@ -22,7 +27,7 @@ const App = () => {
     if (persons.map(person => person.name).includes(newName)){
       alert(`${newName} is already added to phonebook`)
     } else{
-      const newPerson = {name: newName, phone: newPhone}
+      const newPerson = {name: newName, number: newPhone}
       setPersons(persons.concat(newPerson))
     }
   }
@@ -53,7 +58,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter value = {searchName} handleOnChange={handleSearchChange}/>
+      search: <Filter value = {searchName} handleOnChange={handleSearchChange}/>
       <PersonForm 
         addPerson={addPerson} 
         newName = {newName} 

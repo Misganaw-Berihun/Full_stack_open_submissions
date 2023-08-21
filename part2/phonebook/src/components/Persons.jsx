@@ -1,6 +1,6 @@
 const Persons = ({persons}) => {
     return (
-        persons.map(person => <p>{person.name} {person.phone}</p>)
+        persons.map(person => <p>{person.name} {person.number}</p>)
         )
 }
 
