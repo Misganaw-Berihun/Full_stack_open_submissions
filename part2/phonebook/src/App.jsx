@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Persons from './components/Persons.jsx'
 import Filter from './components/Filter.jsx'
-import axios from 'axios'
+import newServices from './services/persons.js'
 import PersonForm from './components/PersonForm.jsx'
 
 const App = () => {
@@ -9,28 +9,51 @@ const App = () => {
   const [newName, setNewName] = useState('Enter a name:')
   const [newPhone, setNewPhone] = useState('Enter phone: ')
   const [searchName, setSearchName] = useState('')
-   
+
+
   useEffect(() => {
     console.log('effect')
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      console.log('setting persons ...')
-      setPersons(response.data)
-    })
-  }, [])
+    newServices. 
+    getAll(). 
+    then(initialPersons => setPersons(initialPersons), [])
+
   
   const addPerson = (event) => {
     event.preventDefault()
     console.log(event.target)
     console.log(persons, newName)
-    if (persons.map(person => person.name).includes(newName)){
-      alert(`${newName} is already added to phonebook`)
+    const person = persons.find(person => person.name === newName)
+    if (person){
+      if (!confirm(`${person.name} is already added to phonebook, replace the old number with a new one`)){
+        return
+      }
+      const id = person.id
+      newServices 
+      .update(person, newPhone)
+      .then(
+        returnedResult => {
+          setPersons(
+            persons
+            .map(
+              p => p.id != id ? p : returnedResult
+              )
+            )
+        } 
+      ) 
     } else{
       const newPerson = {name: newName, number: newPhone}
-      setPersons(persons.concat(newPerson))
+      console.log("newPerson:",newPerson)
+      newServices 
+      .create(newPerson) 
+      .then( 
+        returnedResult => {
+          console.log('returned',returnedResult)
+          setPersons(persons.concat(returnedResult))
+        }
+      )
     }
   }
+
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -67,7 +90,7 @@ const App = () => {
         handlePhoneChange={handlePhoneChange} 
       />
       <h2>Numbers</h2>
-      <Persons persons = {personsToShow} />
+      <Persons persons = {personsToShow} setPersons={setPersons}/>
     </div>
   )
 }
