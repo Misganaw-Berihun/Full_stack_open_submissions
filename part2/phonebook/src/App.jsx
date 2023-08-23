@@ -10,12 +10,13 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('Enter phone: ')
   const [searchName, setSearchName] = useState('')
 
+
   useEffect(() => {
     console.log('effect')
     newServices. 
     getAll(). 
-    then(initialPersons => setPersons(initialPersons))
-  }, [])
+    then(initialPersons => setPersons(initialPersons), [])
+
   
   const addPerson = (event) => {
     event.preventDefault()
