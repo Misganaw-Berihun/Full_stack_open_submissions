@@ -15,7 +15,8 @@ const App = () => {
     console.log('effect')
     newServices. 
     getAll(). 
-    then(initialPersons => setPersons(initialPersons), [])
+    then(initialPersons => setPersons(initialPersons))
+  }, [])
 
   
   const addPerson = (event) => {
@@ -92,7 +93,6 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons persons = {personsToShow} setPersons={setPersons}/>
     </div>
-  )
-}
-
+    )
+  }
 export default App
