@@ -16,6 +16,7 @@ const App = () => {
     getAll(). 
     then(initialPersons => setPersons(initialPersons))
   }, [])
+
   
   const addPerson = (event) => {
     event.preventDefault()
