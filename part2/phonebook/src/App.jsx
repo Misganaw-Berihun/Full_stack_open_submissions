@@ -25,13 +25,18 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     } else{
       const newPerson = {name: newName, number: newPhone}
+      console.log("newPerson:",newPerson)
       newServices 
       .create(newPerson) 
       .then( 
-        returnedResult => setPersons(persons.concat(returnedResult))
+        returnedResult => {
+          console.log('returned',returnedResult)
+          setPersons(persons.concat(returnedResult))
+        }
       )
     }
   }
+
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -68,7 +73,7 @@ const App = () => {
         handlePhoneChange={handlePhoneChange} 
       />
       <h2>Numbers</h2>
-      <Persons persons = {personsToShow} />
+      <Persons persons = {personsToShow} setPersons={setPersons}/>
     </div>
   )
 }

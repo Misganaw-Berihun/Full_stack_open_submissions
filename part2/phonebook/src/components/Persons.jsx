@@ -1,6 +1,31 @@
-const Persons = ({persons}) => {
+import newServices from '../services/persons'
+const Persons = ({persons, setPersons}) => {
+
+    const onDelete = (id) => {
+        console.log("on delete")
+        newServices 
+        .deletePerson(id)
+        .then(
+          response => {
+            console.log(response)
+            // setPersons(persons.filter(person => person.id !== id))
+            setPersons(persons.filter(person => person.id !== id))
+          }
+        ) 
+      }
+
     return (
-        persons.map(person => <p key = {person.id}>{person.name} {person.number}</p>)
+        <ul>
+            {
+            persons
+            .map(person => 
+                <div>
+                    <li key = {person.id}>{person.name} {person.number}</li>
+                    <button onClick = {() => onDelete(person.id)}>Delete</button>
+                </div>
+            )
+            }
+        </ul>
         )
 }
 
