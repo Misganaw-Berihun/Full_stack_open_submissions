@@ -21,8 +21,24 @@ const App = () => {
     event.preventDefault()
     console.log(event.target)
     console.log(persons, newName)
-    if (persons.map(person => person.name).includes(newName)){
-      alert(`${newName} is already added to phonebook`)
+    const person = persons.find(person => person.name === newName)
+    if (person){
+      if (!confirm(`${person.name} is already added to phonebook, replace the old number with a new one`)){
+        return
+      }
+      const id = person.id
+      newServices 
+      .update(person, newPhone)
+      .then(
+        returnedResult => {
+          setPersons(
+            persons
+            .map(
+              p => p.id != id ? p : returnedResult
+              )
+            )
+        } 
+      ) 
     } else{
       const newPerson = {name: newName, number: newPhone}
       console.log("newPerson:",newPerson)
