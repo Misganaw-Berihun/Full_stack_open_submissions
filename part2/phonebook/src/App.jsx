@@ -3,12 +3,15 @@ import Persons from './components/Persons.jsx'
 import Filter from './components/Filter.jsx'
 import newServices from './services/persons.js'
 import PersonForm from './components/PersonForm.jsx'
+import Notification from './components/Notification.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('Enter a name:')
   const [newPhone, setNewPhone] = useState('Enter phone: ')
   const [searchName, setSearchName] = useState('')
+  const [errorMessage, setError] = useState(null)
+  const [successMessage, setSuccess] = useState(null)
 
 
   useEffect(() => {
@@ -33,14 +36,26 @@ const App = () => {
       .update(person, newPhone)
       .then(
         returnedResult => {
+          setSuccess(`phone number of ${person.name} is updated succesfully`)
           setPersons(
             persons
             .map(
               p => p.id != id ? p : returnedResult
               )
             )
+          setTimeout(() => {
+            setSuccess(null)
+          }, 5000)
         } 
-      ) 
+      )
+      .catch(error => {
+          setError(`The data of '${person.name}' is already removed from server`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id != person.id))
+        }
+      )
     } else{
       const newPerson = {name: newName, number: newPhone}
       console.log("newPerson:",newPerson)
@@ -49,7 +64,19 @@ const App = () => {
       .then( 
         returnedResult => {
           console.log('returned',returnedResult)
+          setSuccess(`${newName} is added succesfully`)
           setPersons(persons.concat(returnedResult))
+          setTimeout(() => {
+            setSuccess(null)
+          }, 5000)
+        }
+      )
+      .catch( 
+        error => {
+          setError(`Error creating ${newName}`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
         }
       )
     }
@@ -82,6 +109,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message = {successMessage} isSuccess = {true}/>
+      <Notification message = {errorMessage} isSuccess = {false}/>
       search: <Filter value = {searchName} handleOnChange={handleSearchChange}/>
       <PersonForm 
         addPerson={addPerson} 
@@ -91,7 +120,7 @@ const App = () => {
         handlePhoneChange={handlePhoneChange} 
       />
       <h2>Numbers</h2>
-      <Persons persons = {personsToShow} setPersons={setPersons}/>
+      <Persons persons = {personsToShow} setPersons={setPersons} setSuccess={setSuccess}/>
     </div>
     )
   }
