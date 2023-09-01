@@ -2,6 +2,6 @@ PUT http://localhost:3001/api/persons/64f185681a2b4bae4f2124a2
 Content-Type: application/json
 
 {
-    "name":"Haylemicheal Berihun",
+    "name":"Hay",
     "number": "0988888888"    
 }
