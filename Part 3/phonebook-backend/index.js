@@ -30,6 +30,25 @@ let persons = [
     }
 ]
 
+const updateData = (req, res, next) => {
+    const {id} = req.params
+    const body = req.body
+    console.log("id", id)
+    console.log("body:", body)
+
+    console.log(body)
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(id, person, {new: true})
+    .then(updatedPerson => {
+        res.json(updatedPerson)
+    })
+    .catch(error => next(error))
+}
+
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons =>{
         res.json(persons)
@@ -54,7 +73,7 @@ const generateId = () => {
     return id;
 }
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body 
 
 
@@ -63,42 +82,76 @@ app.post('/api/persons', (req, res) => {
             error: 'name or number is missing'
         })
     } 
-    
-    // const names = persons.map(p => p.name)
-    // if (names.includes(body.name)){
-    //     return res.status(409).json({
-    //         error: 'Name must be unique'
-    //     })
-    // } 
+    console.log(req.body)
+    Person.findOne({name: body.name})
+    .then(result => {
+        if (result){
+            console.log("Record found")
+            console.log("result:", result)
+            updateData(req, res, next);
+        } else {
+            console.log(body)
+            const person = new Person({
+                name: body.name,
+                number: body.number
+            })
+            person.save().then(result => {
+                res.json(result)
+            })
+        }
+    })
+    .catch(error => next(error))
+})
 
-    const id = generateId()
-    body.id = id
-    console.log(body)
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-    person.save().then(result => {
-        res.json(result)
-    })
+app.put('/api/persons/:id', (req, res, next) => {
+    updateData(req, res, next);
 })
 
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id
-    Person.findById(id).then(result => {
-        res.json(result)
+    Person.findById(id)
+    .then(result => {
+        if (result){
+            res.json(result)
+        } else{
+            res.status(404).end()
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        return next(error)
     })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+app.delete('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id
     console.log(id)
-    persons = persons.filter(p => p.id !== id)
-    console.log(persons)
-    res.status(204).end()
+    Person.findByIdAndRemove(id)
+    .then(result => {
+        res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
+
+const errorHandler = (error, req, res, next) => {
+    console.log(error.message)
+
+    if (error.name =='CastError'){
+        return res.status(400).send({error: 'malformatted id'})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
+
+const unknownEndPoint = (req, res) => {
+    res.status(500).json({error: 'Something went wrong'})
+}
+
+app.use(unknownEndPoint)
 const PORT = process.env.PORT 
 app.listen(PORT,() => {
     console.log(`Listening at port ${PORT}`)
