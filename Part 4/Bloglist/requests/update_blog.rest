@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/64f217a5e1172cd4e7a7b107
+Content-Type: application/json
+
+{
+  "title": "Why Spotify Struggles to Make Money from Music Streaming",
+  "author": "Brain Labs Adeyemo",
+  "url": "medium.com/brain-labs/why-spotify-struggles-to-make-money-from-music-streaming-ba940fc56ebd",
+  "likes": 3500,
+  "id": "64f217a5e1172cd4e7a7b107"
+}
